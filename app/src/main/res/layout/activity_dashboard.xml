@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
     tools:context=".Dashboard">
-    
-    
+
+
     <RelativeLayout
-        android:layout_weight="0.5"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
 
         <ImageView
             android:id="@+id/cockpitView"
@@ -26,6 +26,34 @@
         android:layout_height="match_parent"
         android:layout_weight="0.5">
 
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="17dp"
+            android:layout_marginRight="17dp"
+            android:layout_marginBottom="57dp"
+            android:background="@drawable/joystick_background">
+
+
+        </TextView>
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="70dp"
+            android:layout_marginRight="70dp"
+            android:layout_marginBottom="93dp"
+            android:background="@drawable/joystick">
+
+        </TextView>
+
         <SeekBar
             android:id="@+id/rudderSeekbar"
             android:layout_width="300dp"
@@ -35,7 +63,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="53dp"
             android:layout_marginRight="53dp"
-            android:layout_marginBottom="50dp" />
+            android:layout_marginBottom="50dp"
+            android:max="1"
+            android:min="-1"/>
 
         <TextView
             android:id="@+id/textView"
@@ -51,25 +81,30 @@
 
         <SeekBar
             android:id="@+id/throttleSeekbar"
-            android:layout_width="wrap_content"
-            android:layout_height="212dp"
+            android:layout_width="159dp"
+            android:layout_height="255dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="298dp"
-            android:layout_marginRight="298dp"
-            android:layout_marginBottom="84dp" />
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="252dp"
+            android:layout_marginRight="252dp"
+            android:layout_marginBottom="50dp"
+            android:rotation="-90"
+            android:max="1"
+            android:min="0"/>
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="107dp"
-            android:layout_height="181dp"
+            android:layout_width="97dp"
+            android:layout_height="400dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="240dp"
-            android:layout_marginRight="240dp"
-            android:layout_marginBottom="96dp"
+            android:layout_marginEnd="213dp"
+            android:layout_marginRight="213dp"
+            android:layout_marginBottom="79dp"
             android:rotation="-90"
             android:text="<--Throttle-->" />
     </RelativeLayout>
