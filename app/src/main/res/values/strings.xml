@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FlightMobileApp</string>
+    <string name="throttle">--Throttle--</string>
+    <string name="rudder">--Rudder--</string>
 </resources>

@@ -27,7 +27,28 @@
         android:layout_weight="0.5">
 
 
+        <!--
+
+
+        <io.github.controlwear.virtual.joystick.android.JoystickView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/joystickView_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="64dp"
+            custom:JV_borderWidth="8dp"
+            custom:JV_backgroundColor="#009688"
+            custom:JV_borderColor="#00796B"
+            custom:JV_buttonColor="#FF6E40"/>
+
+-->
+
+<!--
+
         <TextView
+            android:id="@+id/joystickBackground"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_alignParentEnd="true"
@@ -36,12 +57,14 @@
             android:layout_marginEnd="17dp"
             android:layout_marginRight="17dp"
             android:layout_marginBottom="57dp"
-            android:background="@drawable/joystick_background">
+            android:background="@drawable/joystick_background"/>
 
 
-        </TextView>
 
-        <TextView
+
+        <Button
+
+            android:id="@+id/joystick"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_alignParentEnd="true"
@@ -50,9 +73,27 @@
             android:layout_marginEnd="70dp"
             android:layout_marginRight="70dp"
             android:layout_marginBottom="93dp"
-            android:background="@drawable/joystick">
+            android:background="@drawable/joystick"/>
 
-        </TextView>
+-->
+
+        <io.github.controlwear.virtual.joystick.android.JoystickView
+            android:id="@+id/joystickView_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_marginBottom="56dp"
+            android:background="@drawable/joystick_background"
+            app:JV_buttonImage="@drawable/joystick"
+            app:JV_fixedCenter="false" />
 
         <SeekBar
             android:id="@+id/rudderSeekbar"
@@ -64,8 +105,8 @@
             android:layout_marginEnd="53dp"
             android:layout_marginRight="53dp"
             android:layout_marginBottom="50dp"
-            android:max="1"
-            android:min="-1"/>
+            android:max="100"
+            android:min="-100"/>
 
         <TextView
             android:id="@+id/textView"
@@ -77,7 +118,7 @@
             android:layout_marginEnd="168dp"
             android:layout_marginRight="168dp"
             android:layout_marginBottom="19dp"
-            android:text="<--Rudder-->" />
+            android:text="@string/rudder" />
 
         <SeekBar
             android:id="@+id/throttleSeekbar"
@@ -92,7 +133,7 @@
             android:layout_marginRight="252dp"
             android:layout_marginBottom="50dp"
             android:rotation="-90"
-            android:max="1"
+            android:max="100"
             android:min="0"/>
 
         <TextView
@@ -106,6 +147,6 @@
             android:layout_marginRight="213dp"
             android:layout_marginBottom="79dp"
             android:rotation="-90"
-            android:text="<--Throttle-->" />
+            android:text="@string/throttle" />
     </RelativeLayout>
 </LinearLayout>
