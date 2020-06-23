@@ -2,19 +2,24 @@ package com.example.flightmobileapp
 
 
 
+import android.content.res.Configuration
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
 import io.github.controlwear.virtual.joystick.android.JoystickView
-import okhttp3.Dispatcher
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
@@ -24,8 +29,13 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     var rudderSeekBar: SeekBar? = null
     var throttleSeekBar: SeekBar? = null
 
+    var commandToSend: Command? = null
 
-
+    //var img: ImageView? = null
+    var currAileron: Double? = null
+    var currElevator: Double? = null
+    var currRudder: Int? = null
+    var currThrottle: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +54,17 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 fromUser: Boolean
             ) {
                 progressChangedValue = progress
+                println(progress.toDouble() / 1000)
+                if(currRudder != progress){
+                    currRudder = progress
+                    val rudderCommand = progress.toDouble() / 100
+                    val commandToSend = Command(aileron = 0.0, throttle = 0.0, rudder = rudderCommand, elevator = 0.0 )
+
+                    postCommand(commandToSend)
+                }
+
+
+                //if seekbar value changed then change send the command otherwise don't send
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -68,6 +89,14 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 fromUser: Boolean
             ) {
                 progressChangedValue = progress
+                if(currThrottle != progressChangedValue){
+                    currThrottle = progress
+                    val throttleCommand = progress.toDouble() / 100
+                    println(throttleCommand)
+                    val commandToSend = Command(aileron = 0.0, throttle = throttleCommand, rudder = 0.0, elevator = 0.0 )
+                    postCommand(commandToSend)
+                }
+
 
             }
 
@@ -86,23 +115,17 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         val joystickLeft = findViewById<JoystickView>(R.id.joystickView_left) as JoystickView
         joystickLeft.setOnMoveListener { angle, strength ->
 
-               /* String.format(
-                    "x%03d:y%03d",
-                    joystickLeft.normalizedX,
-                    joystickLeft.normalizedY
-                )*/
-                print(joystickLeft.normalizedX)
-                print(joystickLeft.normalizedY)
+
+            val aileronCommand = cos(angle.toDouble()) * strength
+            val elevatorCommand = sin(angle.toDouble()) * strength
+
+            val commandToSend = Command(aileron = aileronCommand, throttle = 0.0, rudder = 0.0, elevator = elevatorCommand)
+            postCommand(commandToSend)
+
         }
 
 
-        // get request for screenshot call this function every 0.5 seconds
-       /* CoroutineScope(Dispatchers.IO).Launch{
-            while (true){
-                delay(250)
-                //get screenshot
-            }
-        }*/
+
 
 
         // a thread that runs in the background and send a GET http request for the cockpit view
@@ -122,9 +145,39 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
         thread.start()
 
+        //orientation
+        fun onConfigurationChanged(newConfig: Configuration) {
+            super.onConfigurationChanged(newConfig)
+
+            // Checks the orientation of the screen
+            if (newConfig.orientation === Configuration.ORIENTATION_LANDSCAPE) {
+                //retrieving resources for the variations
+                setContentView(R.layout.activity_dashboard)
+            } else if (newConfig.orientation === Configuration.ORIENTATION_PORTRAIT) {
+                //retrieving resources for the variations
+                setContentView(R.layout.activity_dashboard)
+            }
+        }
 
 
+    }
 
+    fun postCommand(command: Command){
+        val gson = GsonBuilder().setLenient().create()
+        val retrofit = Retrofit.Builder().baseUrl("http://10.0.2.2:5001/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        val api = retrofit.create(Api::class.java)
+        val body = api.postCommand(command).enqueue(object : Callback<ResponseBody>{
+            override fun onResponse(
+                call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                println(response.body())
+
+            }
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                //display failure
+            }
+        })
     }
 
 
@@ -140,6 +193,12 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 response: Response<ResponseBody>
             ) {
                 if(response.isSuccessful) {
+                    //img = findViewById(R.id.cockpitView) as ImageView
+                    val I = response?.body()?.byteStream()
+                    val B = BitmapFactory.decodeStream(I)
+                    runOnUiThread{
+                        cockpitView.setImageBitmap(B)
+                    }
                     //ImageView img = findViewById<>("cockpitView")
                     //setImageBitmap(body)
                 }
@@ -162,4 +221,7 @@ class Dashboard : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     override fun onStopTrackingTouch(p0: SeekBar?) {
         TODO("Not yet implemented")
     }
+
+
+
 }
